@@ -1,6 +1,7 @@
 from typing import Tuple
 from unittest import TestCase
-from src.entity import DrugUser, Syringe
+
+from src.model.entity import DrugUser, Syringe
 
 
 def perform_drug_usage(user_infection: bool, syringe_infection: bool) -> Tuple[DrugUser, Syringe]:

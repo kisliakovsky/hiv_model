@@ -5,6 +5,8 @@ from datetime import time as Time
 
 from matplotlib import pyplot
 from matplotlib.dates import DateFormatter
+
+from src.model.model import Model
 from src.util import paths
 import seaborn
 
@@ -50,3 +52,26 @@ def save_plot(x, y, title: str):
     path = Path(RESULTS_DIR, title).with_suffix(".png")
     path_str = str(path)
     pyplot.savefig(path_str)
+
+
+def save_comparison(model1: Model, model2: Model, title: str):
+    models = model1, model2
+    figure, axes_bunch = pyplot.subplots(1, 2, sharey="row")
+    figure.suptitle(title)
+    figure.set_figwidth(15)
+    for i in range(2):
+        axes = axes_bunch[i]
+        model = models[i]
+        _save_stacked_plot(model, axes)
+    path = Path(RESULTS_DIR, "hiv_spread").with_suffix(".png")
+    path_str = str(path)
+    pyplot.savefig(path_str)
+
+
+def _save_stacked_plot(model, axes):
+    axes.set_title(model.get_name())
+    axes.set_xlabel("day")
+    axes.set_ylabel("number of infected")
+    axes.set_ylim((0, model.get_population_size()))
+    x, y1, y2 = model.run()
+    axes.stackplot(x, y1, y2)
