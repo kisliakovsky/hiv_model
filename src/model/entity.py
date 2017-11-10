@@ -1,8 +1,12 @@
-import random
+from random import Random
 
-SYRINGE_INFECTION_GENERATOR = random.Random()
-DRUG_USER_INFECTION_GENERATOR = random.Random()
-BLEACH_RANDOM_GENERATOR = random.Random()
+SYRINGE_INFECTION_GENERATOR_SEED = 496231
+DRUG_USER_INFECTION_GENERATOR_SEED = 952207
+BLEACH_RANDOM_GENERATOR_SEED = 852199
+
+SYRINGE_INFECTION_GENERATOR = Random(SYRINGE_INFECTION_GENERATOR_SEED)
+DRUG_USER_INFECTION_GENERATOR = Random(DRUG_USER_INFECTION_GENERATOR_SEED)
+BLEACH_RANDOM_GENERATOR = Random(BLEACH_RANDOM_GENERATOR_SEED)
 BLEACH_PROBABILITY = 0.37
 SYRINGE_INFECTION_PROBABILITY = 0.18
 DRUG_USER_INFECTION_PROBABILITY = 0.0105
@@ -25,8 +29,7 @@ class Syringe(object):
             self.__is_infected = True
 
     def bleach(self):
-        probability = BLEACH_RANDOM_GENERATOR.random()
-        if probability <= BLEACH_PROBABILITY:
+        if BLEACH_RANDOM_GENERATOR.random() <= BLEACH_PROBABILITY:
             self.__is_infected = False
 
     @staticmethod
@@ -58,12 +61,10 @@ class DrugUser(object):
     def use_drug(self, syringe: Syringe):
         syringe.use(self)
         if syringe.is_infected:
-            infection_probability = DRUG_USER_INFECTION_GENERATOR.random()
-            if infection_probability < DRUG_USER_INFECTION_PROBABILITY:
+            if DRUG_USER_INFECTION_GENERATOR.random() < DRUG_USER_INFECTION_PROBABILITY:
                 self.infect()
         else:
-            infection_probability = SYRINGE_INFECTION_GENERATOR.random()
-            if infection_probability < SYRINGE_INFECTION_PROBABILITY:
+            if SYRINGE_INFECTION_GENERATOR.random() < SYRINGE_INFECTION_PROBABILITY:
                 syringe.infect()
 
     @staticmethod
@@ -73,3 +74,16 @@ class DrugUser(object):
     @staticmethod
     def get_infected_drug_user():
         return DrugUser(True)
+
+
+class SyringeBag(object):
+
+    SYRINGE_RANDOMIZER_SEED = 1337
+
+    def __init__(self, number_of_syringes):
+        self.__syringes = [Syringe() for _ in range(number_of_syringes)]
+        self.__extraction_generator = Random(SyringeBag.SYRINGE_RANDOMIZER_SEED)
+
+    def get_out_random_syringe(self):
+        index = self.__extraction_generator.randint(0, len(self.__syringes) - 1)
+        return self.__syringes[index]

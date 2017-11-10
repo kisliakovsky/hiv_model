@@ -1,7 +1,7 @@
 from random import Random
 from typing import List, Tuple
 
-from src.model.entity import Syringe, DrugUser
+from src.model.entity import Syringe, DrugUser, SyringeBag
 from src.model.model import Model
 
 
@@ -28,11 +28,10 @@ class DiscreteTimeModel(Model):
     @staticmethod
     def _generate_population(population_size) -> List[DrugUser]:
         population = []
-        random_generator = Random(DiscreteTimeModel.POPULATION_GENERATOR_SEED)
+        user_generator = Random(DiscreteTimeModel.POPULATION_GENERATOR_SEED)
         for i in range(population_size):
-            infection_value = random_generator.random()
             is_infected = False
-            if infection_value <= DiscreteTimeModel.PROBABILITY_TO_SAMPLE_INFECTED:
+            if user_generator.random() <= DiscreteTimeModel.PROBABILITY_TO_SAMPLE_INFECTED:
                 is_infected = True
             population.append(DrugUser(is_infected))
         return population
@@ -81,16 +80,3 @@ class DiscreteTimeModel(Model):
 
     def get_population_size(self) -> int:
         return self.__population_size
-
-
-class SyringeBag(object):
-
-    SYRINGE_RANDOMIZER_SEED = 1337
-
-    def __init__(self, number_of_syringes):
-        self.__syringes = [Syringe() for _ in range(number_of_syringes)]
-        self.__extraction_generator = Random(SyringeBag.SYRINGE_RANDOMIZER_SEED)
-
-    def get_out_random_syringe(self):
-        index = self.__extraction_generator.randint(0, len(self.__syringes) - 1)
-        return self.__syringes[index]
