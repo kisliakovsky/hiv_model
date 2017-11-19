@@ -1,7 +1,7 @@
 from random import Random
 from typing import List, Tuple
 
-from src.model.entity import Syringe, DrugUser, SyringeBag
+from src.model.entity import DrugUser, SyringeBag
 from src.model.model import Model
 
 

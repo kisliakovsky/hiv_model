@@ -1,7 +1,5 @@
 from typing import Tuple, List
 from random import Random
-import numpy
-from src.model.entity import SyringeBag
 
 from src.model.model import Model
 
